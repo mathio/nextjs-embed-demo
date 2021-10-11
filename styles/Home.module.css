@@ -30,7 +30,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  flex-grow: 0;
+  margin: 0 10px;
 }
 
 .title a {
@@ -56,8 +57,9 @@
 }
 
 .description {
-  line-height: 1.5;
-  font-size: 1.5rem;
+  margin-top: 5rem;
+  line-height: 2;
+  font-size: 1.25rem;
 }
 
 .code {
