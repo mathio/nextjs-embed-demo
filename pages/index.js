@@ -1,12 +1,71 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Popover } from '@typeform/embed-react'
 
 const formId = 'crNvgGG2'
-const tooltip = 'Hello, please give us your feedback.'
+
+const getCookie = (name) => {
+  const match = document.cookie.match(new RegExp(`${name}="([^"]+)"`))
+  return match && match[1] || null
+}
+
+const clearCookies = () => {
+  document.cookie = 'typeform_name="";'
+  document.cookie = 'typeform_rating="";'
+  window.location.reload()
+}
 
 export default function Home() {
+  const [ typeformName, setTypeformName ] = useState(null)
+  const [ typeformRating, setTypeformRating ] = useState(null)
+  const isTypeformRatingGood = typeformRating > 5
+
+  const initializeFromCookies = () => {
+    setTypeformName(getCookie('typeform_name'))
+    setTypeformRating(getCookie('typeform_rating'))
+  }
+
+  useEffect(initializeFromCookies, [])
+
+  const handleTypeformSubmit = async ({ responseId }) => {
+    console.log('form submitted, response has id', responseId)
+    const response = await fetch(`/api/response?id=${formId}&response_id=${responseId}`)
+
+    if (response.ok) {
+      const { name, rating } = await response.json()
+      console.log('Form responses', { name, rating })
+
+      if (name) {
+        document.cookie = `typeform_name="${name}";`
+        setTypeformName(name)
+      }
+
+      if (rating) {
+        document.cookie = `typeform_rating="${rating}";`
+        setTypeformRating(rating)
+      }
+    }
+  }
+
+  const getTooltip = () => {
+    if (typeformName) {
+
+      if (typeformRating) {
+        const ratingMessage = isTypeformRatingGood
+          ? 'We are happy you like our website!'
+          : 'We will try to improve our website!'
+        return `Hello, ${typeformName}! ${ratingMessage}`
+      } else {
+        return `Hello, ${typeformName} please rate our website.`
+      }
+
+    } else {
+      return 'Hello, please give us your feedback.'
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -22,13 +81,20 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          There is a button in bottom right that opens a typeform.
+          There is a button in bottom right that opens a typeform.<br/>
+          To reset typeform and tooltip you can <button onClick={clearCookies}>clear cookies and reload the page</button>.
         </p>
 
         <Popover
+          key={`${typeformName}-${typeformRating}`}
           id={formId}
           chat
-          tooltip={tooltip}
+          tooltip={getTooltip()}
+          onSubmit={handleTypeformSubmit}
+          hidden={{
+            visitor_name: typeformName,
+            visitor_rating: typeformRating === null ? '' : (isTypeformRatingGood ? 'good' : 'bad'),
+          }}
           autoClose
         />
       </main>
