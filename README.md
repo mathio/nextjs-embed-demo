@@ -4,6 +4,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 It displays [feedback typeform](https://form.typeform.com/to/crNvgGG2) using [@typeform/embed](https://github.com/Typeform/embed/tree/main/packages/embed-react) library.
 
+## Read about this project on Medium
+
+[Integrate Typeform with Next.js](https://mathio28.medium.com/integrate-typeform-with-next-js-b27a5306bfbb)
+
 ## Getting Started
 
 First, run the development server:
