@@ -8,6 +8,10 @@ It displays [feedback typeform](https://form.typeform.com/to/crNvgGG2) using [@t
 
 [Integrate Typeform with Next.js](https://mathio28.medium.com/integrate-typeform-with-next-js-b27a5306bfbb)
 
+## See deployed app on CodeSandbox
+
+[CodeSandbox demo](https://codesandbox.io/s/nextjs-embed-demo-d4n4o)
+
 ## Getting Started
 
 First, run the development server:
